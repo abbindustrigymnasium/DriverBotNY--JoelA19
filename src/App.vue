@@ -10,7 +10,7 @@
 
     <v-content>
     <div >
-      <v-btn color="success">Sucess</v-btn>
+      <v-btn color="success" v-on:click= clickPub>Sucess</v-btn>
     <ExampleComp MSG="apa apa apa" />
       </div>
           <div>
@@ -24,11 +24,12 @@
 
 <script>
 import ExampleComp from './components/ExampleComp'
-
+import VueMqtt from  'vue-mqtt'
 export default {
   name: 'App',
   components: {
-    ExampleComp
+    ExampleComp,
+    VueMqtt
   },
   data () {
     return {

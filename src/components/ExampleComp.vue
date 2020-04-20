@@ -83,6 +83,10 @@ export default {
           var random =Math.floor(Math.random() * (+max - +min)) + +min; 
           return random;
     } ,
+      MQTT(message){
+          this.$mqtt.subscribe('joel.andersson@abbindustrigymnasium.se/drive')
+          this.$mqtt.publish('joel.andersson@abbindustrigymnasium.se/drive', message)
+      }
     }
 
 }
