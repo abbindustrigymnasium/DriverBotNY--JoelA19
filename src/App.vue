@@ -96,12 +96,12 @@ export default {
       this.$store.dispatch("addToLogger", message);
     }
   },
-  data () {
-    return {
-      addnew:false,
-      Direction : 1
-      //
-    }
-  }
+  data: () => ({
+        counter: 0,
+    connected: false,
+    client: "JoeDart",
+    user: "joel.andersson@abbindustrigymnasium.se",
+    pass: "Changes",
+  })
 }
 </script>

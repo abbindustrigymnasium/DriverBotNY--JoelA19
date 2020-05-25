@@ -17,7 +17,7 @@ Partier = [
         "Block": "Oljeblocket", "Min Röst": 12, "Max Röst": 18, "partiledare": "Neo"},
     {"parti": "Allpartiet", "inriktning": "vänster",
         "Block": "inget", "Min Röst": 20, "Max Röst": 34, "partiledare": "Kleobold III"},
-] # Alla värden
+] # Alla värden som används för information om partierna.
 Platsuttalanden = ["i en intervju med Fria Tider.", "när vi frågar honom om hans åsikter på det amerikanska valet.", "på lokalTV i Flen.", "i en intervju med Playboy.", "när vi hittar honom i kön till en strippklubb.", "i veckans avsnitt av skavlan."]
 PåverkandeUttalanden = ["Jag är inte rasist, men...", "Jag tycker inte att kommunism är så dåligt ändå...", "Varför tycker alla att Trump är så dålig egentligen?", "Det finns alldeles för mycket glasssmaker!"]
 Uttalanden = ["är väldigt nöjd med de", "är väldigt tacksam för de", "vill tacka sin mamma för de", "har återfått sin tro på Allah på grund av de", "hoppar glädjehopp på grund av de", "tar av sig alla kläder och gör helikoptern för de"]
@@ -55,7 +55,7 @@ def Rösta(): # Funktionen som allt hänger på, simulerar ett val
         if x["inriktning"] == "höger":
             InriktningsRöster[1][1] += x["Röster"]
             HParti.append(x["partiledare"])
-    return TotalRöster, HParti, VParti, IParti, SParti, OParti, BlockRöster, InriktningsRöster # Returnar alla variablar som behövs
+    return TotalRöster, BlockRöster, InriktningsRöster # Returnar alla variablar som behövs
 
 for x in Partier: # Alla partier har en chans att deras partiledare säger något dumt som sänker deras Max Röst med 4. Om partiet är åt höger är chansen 7.5%, annars 5%.
  # Viktigt att detta händer innan själva funktionen kallas på, annars har den ingen effekt. 
@@ -70,11 +70,11 @@ for x in Partier: # Alla partier har en chans att deras partiledare säger någo
             if x["Max Röst"] < x["Min Röst"]:# Eftersom att vissa partier får en max röst som är lägre än deras min röst när man sänkt max röst med 4, måste man  lägga in nånting att fixa detta. Koden nedanför gör att Max röst blir densamma som min röst, och därmed har deras resultat redan blivit bestämt. 
                 x["Max Röst"] = x["Min Röst"]
         
-TotalRöster, HParti, VParti, IParti, SParti, OParti, BlockRöster, InriktningsRöster = Rösta() # Definerar alla variablar och kallar på funktionen
+TotalRöster, BlockRöster, InriktningsRöster = Rösta() # Definerar alla variablar och kallar på funktionen
 
 
 while TotalRöster > 100:
-    TotalRöster, HParti, VParti, IParti, SParti, OParti, BlockRöster, InriktningsRöster= Rösta() # Om totala röster är mer än 100, så gör den om allting<<<
+    TotalRöster, BlockRöster, InriktningsRöster= Rösta() # Om totala röster är mer än 100, så gör den om allting
 
 
 for x in Partier: # Om den här for-loopen inte skulle funnits, hade de procenttalen som visats upp bara varit giltiga ifall totala röster = 100. Lyckligtvis kan den räkna ut det sanna procenttalet och avrunda det till hela tal.
@@ -89,12 +89,12 @@ InriktningsRöster.sort(key=takeSecond, reverse = True)# Sorterar inriktningarna
 print("Det var " + str(TotalRöster) + "% av invånarna som röstade.") # Totala röster
 
 for x in range(3):
-    print(Partier[x-1]["partiledare"], Uttalanden[random.randint(0, len(Uttalanden)-1)], Partier[x]["Röster"],"% av rösterna som", Partier[x-1]["parti"],"fick.") # De tre största partierna går ut med varsitt pressmedelande, med ett random uttalande från listan tidigare
+    print(Partier[x]["partiledare"], Uttalanden[random.randint(0, len(Uttalanden)-1)], Partier[x]["Röster"],"% av rösterna som", Partier[x]["parti"],"fick.") # De tre största partierna går ut med varsitt pressmedelande, med ett random uttalande från listan tidigare
 
 a = 0 
 for x in range(len(Partier)): # Den går igenom alla partier baklänges, efter att de är sorterade på röster, och sen gör det minsta partiet ett pressmedelande, med ett random uttalande från listan tidigare, men bara om det har mer än eller lika med 4% röster. Annars går den vidare till det näst minsta osv.
     if Partier[0 - (x + 1)]["Röster"] > 3 :
-        if a == 0: # Det var lätast använda en for-loop för att gå igenom alla partier tills man hittar en som har mer än 4%, men då behövdes ett system som får den att sluta när den har hittat sitt mål. Då använde jag en simpel variabel som visar 0 om den inte har hittat, och visar 1 om den har hittat. 
+        if a == 0: # Det var lättast använda en for-loop för att gå igenom alla partier tills man hittar en som har mer än 4%, men då behövdes ett system som får den att sluta när den har hittat sitt mål. Då använde jag en simpel variabel som visar 0 om den inte har hittat, och visar 1 om den har hittat. 
             print(Partier[0 - (x + 1)]["partiledare"], NegUtt[random.randint(0, len(NegUtt)-1)], Partier[0 - (x + 1)]["Röster"],"% av rösterna som", Partier[0 - (x + 1)]["parti"],"fick.")
             a = 1
 
