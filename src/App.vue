@@ -2,7 +2,7 @@
   <v-app>
     <v-toolbar app>
       <v-toolbar-title class="headline text">
-        <span>TheSuperEpicLegoRobotOFSuperMegaEpicness</span>
+        <span>TheSuperEpicLegoRobotOfSuperMegaEpicness</span>
         
       </v-toolbar-title>
       <v-spacer></v-spacer>
@@ -13,14 +13,19 @@
       
       </div>
     <div >
-      <v-btn color="success" v-on:click="Send('f1024')">Forward</v-btn>
+      <v-btn color="success" v-on:click="direc='f'; Send(direc + '1024' + ang)">Forward</v-btn>
       </div>
       <div >
-      <v-btn color="success" v-on:click="Send('b1024')">Backward</v-btn>
+      <v-btn color="success" v-on:click="direc='b'; Send(direc + '1024' + ang)">Backward</v-btn>
+      </div>
+      <div >
+      <v-btn color="success" v-on:click="direc='b'; Send(direc + '0000' + ang)">Stop</v-btn>
       </div>
           <div>
             <v-card width="200" height="200" class="test" justify-center> 
-            <v-switch v-model="Direction" class="ma-20" label="direction"></v-switch>
+            <v-btn color="success" v-on:click="ang='000'; Send(direc + '1024' + ang)">Left</v-btn>
+            <v-btn color="success" v-on:click="ang='180'; Send(direc + '1024' + ang)">Right</v-btn>
+            <v-btn color="success" v-on:click="ang='090'; Send(direc + '1024' + ang)">Mid</v-btn>
       </v-card>
       </div>
     </v-content>
@@ -29,52 +34,49 @@
 
 <script>
 var mqtt = require("mqtt");
-import ExampleComp from './components/ExampleComp'
 // import VueMqtt from  'vue-mqtt'
 export default {
-  name: 'App',
-  components: {
-    ExampleComp,
-    
+  created() {
+    this.connect();
+    this.Send("f1024090");
   },
+  name: 'App',
   methods: {
     //Metoder
-    Connect() {
-      //https://github.com/mqttjs/MQTT.js/blob/master/README.md
-      var ref = this;
-      if (this.connected == true) {
-        return "";
-      }
-      this.clientId =
-        "DriverControll" +
-        Math.random()
-          .toString(16)
-          .substr(2, 8);
-      var mqtt_url = "joel.andersson@abbindustrigymnasium.se"
+   connect() {
+      var mqtt_url = "maqiatto.com";
       var url = "mqtt://" + mqtt_url;
       var options = {
         port: 8883,
-        clientId: this.clientId,
-        username: "joel.andersson@abbindustrigymnasium.se",
-        password: "Changes"
+        clientId:
+          "mqttjs_" +
+          Math.random()
+            .toString(16)
+            .substr(2, 8),
+        username: this.user,
+        password: this.pass
       };
-      this.options = options;
-      // console.log("connecting");
+      // user = this.options.username
+      // pass = this.options.password
+      /* eslint-disable */
+      console.log("connecting");
       this.client = mqtt.connect(url, options);
-      // console.log("connected?");
+      /* eslint-disable */
+      console.log("connected?");
       this.client
-        .on("connect", function() {
-          // console.log("success");
-          ref.Connecting(true);
+        .on("error", function(error) {
+          /* eslint-disable */
+          console.log("no");
+          this.connected = false;
+          /* eslint-disable */
+          console.log(this.connected);
         })
-        .on("error", function() {
-          // console.log("error");
-          ref.Connecting(false);
-        })
-        .on("close", function() {
-          ref.Connecting(false);
-          // console.log("closing");
+        .on("close", function(error) {
+          /* eslint-disable */
+          console.log("no");
+          this.connected = false;
         });
+      this.connected = true;
     },
     Connecting(connected) {
       this.connected = connected;
@@ -87,17 +89,14 @@ export default {
         this.Send("drive", this.clientId + " har anslutits.");
       }
     },
-    Send(adress, message) {
-      // console.log(message);
-      this.client.publish(
-        this.options.username + "/" + "drive", //Exempel         "joakim.flink@abbindustrigymnasium.se"+"/" + "drive",
-        message
-      );
-      this.$store.dispatch("addToLogger", message);
-    }
+    Send(message) {
+      this.client.publish("joel.andersson@abbindustrigymnasium.se/drive", message);
+     console.log(message);
+    },
   },
   data: () => ({
-        counter: 0,
+    ang: "090",
+    direc: "f",
     connected: false,
     client: "JoeDart",
     user: "joel.andersson@abbindustrigymnasium.se",
